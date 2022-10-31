@@ -1,0 +1,4 @@
+I make insertion, selection sort, binary search and hybrid sort.
+Every thing seem fine but not hybrid.
+Just put binary search to the insertion sort doesn't work well.
+I think I should normalize more.
