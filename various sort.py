@@ -31,11 +31,13 @@ def InsertSort(before):
     count=0
     idxB=0
     idxA=0
+    loopnum=0
     isinsert=False
     for idxB in range(sizeB):
         sizeA=len(after)
         count=0
         for idxA in range(sizeA):
+            loopnum+=1
             if(before[idxB]<=after[idxA]):
                 print(count, end=": " )
                 after.insert(count,before[idxB])
@@ -49,7 +51,7 @@ def InsertSort(before):
             print( idxA, end=": " )
             after.append(before[idxB])
         print( after )
-            
+    print("loopCount : ",loopnum)
     return after
 
 def BinarySearch(Adata, Value):
@@ -64,33 +66,45 @@ def BinarySearch(Adata, Value):
         elif(Value < Adata[Mid]):
             EndP = Mid-1
         else:
+            print(Mid, "True")
             return Mid, True
-
+    print(Mid, "False")
     return Mid, False
 
 def ModifySort(before):
-    after=[before[0]]
+    import copy
+    after=[copy.deepcopy(before[0])]
     count=0
     idxB=0
-    idxA=0
-    isinsert=False
+    StartP=0
+    EndP=0
+    Mid=0
+    loopnum=0
+    isInsert=False
     sizeB=len(before)
     sizeA=0
-    for idxB in sizeB:
+    for idxB in range(1,sizeB):
+        isInsert=False
         sizeA=len(after)
-        for idxA in sizeA:
-            if(before[idxB]<=after[idxA]):
-                after.insert(count,before[idxB])
-                isinsert=True
+        StartP=0
+        EndP=sizeA-1
+        print(after)
+        while (StartP<EndP) :
+            loopnum+=1
+            Mid = (StartP+EndP) // 2
+            if(before[idxB] > after[Mid]):
+                StartP = Mid+1
+            elif(before[idxB] < after[Mid]):
+                EndP = Mid-1
+            elif(before[idxB] == after[Mid]):
+                count = Mid
+                isInsert=True
                 break
-            else:
-                isinsert=False
-                count+=1
-                continue
-        if(isinsert==False):
-            after[sizeA+1]=before[idxB]
-        
-            
+        if(isInsert==False):
+            count=Mid
+
+        after.insert(count,copy.deepcopy(before[idxB]))
+    print("LoopCount : ",loopnum)
     return after
 
 def SortTestA( N=20 ):
@@ -102,7 +116,7 @@ def SortTestA( N=20 ):
         arr[N-k-1] = k
     print( "Before", arr)
     arrBefore = copy.deepcopy( arr )
-    arr = InsertSort(arr)
+    arr = ModifySort(arr)
     print( "After", arr)
     arrAfter = copy.deepcopy( arr )
     print( "result : ", arrBefore == arrAfter )
@@ -145,10 +159,31 @@ def SortTest():
     arrAfter = copy.deepcopy( arr )
     print( "result : ", arrBefore == arrAfter )
 
+def SortTest_loopcount():
+    import copy
+    global arrbefore, arrAfter
+    arr01=[0]*20
+    #arr02=[0]*20
+    arr03=[0]*20
+    for i in  range(0,20):
+        arr01[i]=random.randrange(0,20)
+    print( "Before", arr01 )
+    arrBefore = copy.deepcopy( arr01 )
+    #arr02 = InsertSort(arr01)
+    arr03 = ModifySort(arr01)
+    #print( "InsertSort After", arr02 )
+    print( "ModifySort After", arr03 )
+    arrAfter=copy.deepcopy(arr03)
+    print( "result : ",arrBefore == arrAfter )
+
+def Bsearchtest():
+    BinarySearch([1,3,5,7], 0)
+
 def main():
-    CLS()
-    # SortTestB()
-    SortTest()
+    #CLS()
+    #SortTest()
+    #SortTest_loopcount()
+    Bsearchtest()
     
 if ( __name__ == "__main__" ):
     main()
