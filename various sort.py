@@ -39,7 +39,6 @@ def InsertSort(before):
         for idxA in range(sizeA):
             loopnum+=1
             if(before[idxB]<=after[idxA]):
-                print(count, end=": " )
                 after.insert(count,before[idxB])
                 isinsert=True
                 break
@@ -48,9 +47,7 @@ def InsertSort(before):
                 count+=1
                 continue
         if(isinsert==False):            
-            print( idxA, end=": " )
             after.append(before[idxB])
-        print( after )
     print("loopCount : ",loopnum)
     return after
 
@@ -59,16 +56,23 @@ def BinarySearch(Adata, Value):
     Mid = N // 2
     StartP = 0
     EndP = N-1
-    while (StartP<EndP) :
+    while (StartP<=EndP) :
         Mid = (StartP+EndP) // 2
+        print("sp :",StartP,"ep :",EndP,"m :",Mid)
         if(Value > Adata[Mid]):
             StartP = Mid+1
+            print("R")
         elif(Value < Adata[Mid]):
             EndP = Mid-1
+            print("L")
         else:
-            print(Mid, "True")
+            print("Equal Result sp :",StartP,"ep :",EndP,"m :",Mid)
+            # print(Mid, "True")
             return Mid, True
-    print(Mid, "False")
+    if(StartP>EndP):
+        Mid=StartP
+    print("Result sp :",StartP,"ep :",EndP,"m :",Mid)
+    # print(Mid, "False")
     return Mid, False
 
 def ModifySort(before):
@@ -88,8 +92,8 @@ def ModifySort(before):
         sizeA=len(after)
         StartP=0
         EndP=sizeA-1
-        print(after)
-        while (StartP<EndP) :
+        isInsert=False
+        while (StartP<=EndP) :
             loopnum+=1
             Mid = (StartP+EndP) // 2
             if(before[idxB] > after[Mid]):
@@ -100,8 +104,8 @@ def ModifySort(before):
                 count = Mid
                 isInsert=True
                 break
-        if(isInsert==False):
-            count=Mid
+        if(isInsert==False and StartP>EndP):
+            count=StartP
 
         after.insert(count,copy.deepcopy(before[idxB]))
     print("LoopCount : ",loopnum)
@@ -161,29 +165,62 @@ def SortTest():
 
 def SortTest_loopcount():
     import copy
-    global arrbefore, arrAfter
-    arr01=[0]*20
-    #arr02=[0]*20
-    arr03=[0]*20
-    for i in  range(0,20):
-        arr01[i]=random.randrange(0,20)
+    global arrbefore, arrIS, arrMS
+    arr01=[0]*1000
+    arr02=[0]*1000
+    arr03=[0]*1000
+    for i in  range(0,1000):
+        arr01[i]=random.randrange(0,1000)
     print( "Before", arr01 )
-    arrBefore = copy.deepcopy( arr01 )
-    #arr02 = InsertSort(arr01)
+    arr02 = InsertSort(arr01)
     arr03 = ModifySort(arr01)
-    #print( "InsertSort After", arr02 )
+    arrBefore = copy.deepcopy( arr01 )
+    arrIS = copy.deepcopy( arr02 )
+    arrMS = copy.deepcopy( arr03 )
+    print( "InsertSort After", arr02 )
     print( "ModifySort After", arr03 )
-    arrAfter=copy.deepcopy(arr03)
-    print( "result : ",arrBefore == arrAfter )
+    print("result : ",arrBefore==arrIS==arrMS)
+    print("is same : ",arrIS==arrMS)
+
+def SortTest_loopcountA():
+    import copy
+    global arrbefore, arrIS, arrMS
+    arr01=[0]*1000
+    arr02=[0]*1000
+    arr03=[0]*1000
+    for i in  range(0,1000):
+        arr01[i]=random.randrange(0,1000)
+    # print( "Before", arr01 )
+    arr02 = InsertSort(arr01)
+    arr03 = ModifySort(arr01)
+    arrBefore = copy.deepcopy( arr01 )
+    arrIS = copy.deepcopy( arr02 )
+    arrMS = copy.deepcopy( arr03 )
+    # print( "InsertSort After", arr02 )
+    # print( "ModifySort After", arr03 )
+    print("result : ",arrBefore==arrIS==arrMS)
+    print("is same : ",arrIS==arrMS)
+    
+    return arrBefore
+
+def SortTest_Graph() :
+    from matplotlib import pyplot as plt
+    
+    arrBefore = SortTest_loopcountA()
+    plt.plot( arrIS ) ; plt.title( 'arrIS' ) ; plt.show()
+    plt.plot( arrMS ) ; plt.title( 'arrMS' ) ; plt.show()
+    plt.plot( arrBefore ) ; plt.title( 'arrBefore' ) ; plt.show()
+    
 
 def Bsearchtest():
     BinarySearch([1,3,5,7], 0)
 
 def main():
-    #CLS()
+    CLS()
     #SortTest()
-    #SortTest_loopcount()
-    Bsearchtest()
+    # SortTest_loopcount()
+    # Bsearchtest()
+    SortTest_Graph()
     
 if ( __name__ == "__main__" ):
     main()
