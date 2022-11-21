@@ -24,7 +24,7 @@ vector<int> commonSort(vector<int> before)
 			}
 		}
 	}
-	cout<<loopnum<<endl;
+	cout<<"CS loopcount : "<<loopnum<<endl;
 	return before;
 }
 
@@ -78,7 +78,7 @@ vector<int> InsertSort(vector<int> before)
 			}
 		}
 	}
-	cout<<loopnum<<endl;
+	cout<<"IS loopcount : "<<loopnum<<endl;
 	return after;
 }
 
@@ -110,7 +110,7 @@ vector<int> SelectSort(vector<int> before)
 		after.push_back(restore);
 		before.erase(before.begin()+restore_idx);
 	}
-	cout<<loopnum<<endl;
+	cout<<"SS loopcount : "<<loopnum<<endl;
 	return after;
 }
 
@@ -152,6 +152,38 @@ int Binarysearch(vector<int> sorted, int who)
 		}
 	}
 	return where;
+}
+
+int BinarysearchA(vector<int> sorted, int who)
+{
+	vector<int>::iterator itr;
+	int len=sorted.size();
+	int mid=len/2;
+	int sp=0;
+	int ep=len-1;
+	itr=sorted.begin();
+
+	while(sp<=ep)
+	{
+		mid=(sp+ep)/2;
+		if(who>*(itr+mid))
+		{
+			sp=mid+1;
+		}
+		else if(who<*(itr+mid))
+		{
+			ep=mid-1;
+		}
+		else
+		{
+			return mid;
+		}
+	}
+	if(sp>ep)
+	{
+		mid=sp;
+	}
+	return mid;
 }
 
 vector<int> BinaryInsertSort(vector<int> before)
@@ -260,74 +292,127 @@ vector<int> BinaryInsertSort(vector<int> before)
 	return after;
 }
 
+vector<int> BinaryInsertSortA(vector<int> before)
+{
+	int count=0;
+	int idx=0;
+	int sp=0;
+	int ep=0;
+	int mid=0;
+	int loopcount=0;
+	bool isInsert=0;
+	int sizeA=0;
+	int sizeB=0;
+	vector<int> after;
+	vector<int>::iterator b_itr;
+	vector<int>::iterator a_itr;
+
+	after.push_back(*before.begin());
+	sizeB=before.size();
+	b_itr=before.begin();
+	
+	for(idx=0;idx<sizeB;++idx)
+	{
+		isInsert=0;
+		sizeA=after.size();
+		sp=0;
+		ep=sizeA-1;
+		a_itr=after.begin();
+		while(sp<=ep)
+		{
+			loopcount++;
+			mid=(sp+ep)/2;
+			if(*(b_itr+idx)>*(a_itr+mid))
+			{
+				sp=mid+1;
+			}
+			else if(*(b_itr+idx)<*(a_itr+mid))
+			{
+				ep=mid-1;
+			}
+			else
+			{
+				count=mid;
+				isInsert=1;
+				break;
+			}
+		}
+		if(!isInsert&&sp>ep)
+		{
+			count=sp;
+		}
+		after.insert(a_itr+count,*(b_itr+idx));
+	}
+	cout<<"BIS loopcount : "<<loopcount<<endl;
+	return after;
+}
+
+void CStest(vector<int> unsorted)
+{
+	vector<int> sorted_cs;
+	vector<int>::iterator itr_cs;
+	sorted_cs=commonSort(unsorted);
+	for(itr_cs=sorted_cs.begin();itr_cs!=sorted_cs.end();++itr_cs)
+	{
+		cout<<*(itr_cs)<<" | ";
+	}
+	cout<<endl;
+}
+
+void IStest(vector<int> unsorted)
+{
+	vector<int> sorted_is;
+	vector<int>::iterator itr_is;
+	sorted_is=InsertSort(unsorted);
+	for(itr_is=sorted_is.begin();itr_is!=sorted_is.end();++itr_is)
+	{
+		cout<<*(itr_is)<<" | ";
+	}
+	cout<<endl;
+}
+
+void SStest(vector<int> unsorted)
+{
+	vector<int> sorted_ss;
+	vector<int>::iterator itr_ss;
+	sorted_ss=SelectSort(unsorted);
+	for(itr_ss=sorted_ss.begin();itr_ss!=sorted_ss.end();++itr_ss)
+	{
+		cout<<*(itr_ss)<<" | ";
+	}
+	cout<<endl;
+}
+
+void BIStest(vector<int> unsorted)
+{
+	vector<int> sorted_bis;
+	vector<int>::iterator itr_bis;
+	sorted_bis=BinaryInsertSortA(unsorted);
+	for(itr_bis=sorted_bis.begin();itr_bis!=sorted_bis.end();++itr_bis)
+	{
+		cout<<*(itr_bis)<<" | ";
+	}
+	cout<<endl;
+}
+
 int main(void)
 {
-	vector<int> unsorted;
-	vector<int> sorted_cs;
-	vector<int> sorted_is;
-	vector<int> sorted_ss;
-	vector<int> sorted_bis;
-	vector<int>::iterator itr_is;
-	vector<int>::iterator itr_cs;
-	vector<int>::iterator itr_ss;
-	vector<int>::iterator itr_bis;
 	int i=0;
-	int idx=0;
-	int len=0;
-	int find=0;
-	
-	for(i=0;i<32;++i)
+	vector<int> unsorted;
+	vector<int>::iterator us_itr;
+	for(i=0;i<100;++i)
 	{
-		unsorted.push_back(rand());
+		unsorted.push_back(rand()%100);
 	}
-	
-	sorted_cs=commonSort(unsorted);
-	sorted_is=InsertSort(unsorted);
-	sorted_ss=SelectSort(unsorted);
-	sorted_bis=BinaryInsertSort(unsorted);
-//	find=Binarysearch(sorted_is, 15000);
-//	len=sorted_is.size();
-//	len=sorted_ss.size();
-	
-//	for(idx=0, itr=unsorted.begin();itr!=unsorted.end();++itr, ++idx)
-/*	for(idx=0, itr_is=sorted_is.begin();itr_is!=sorted_is.end();++itr_is, ++idx)
+	for(us_itr=unsorted.begin();us_itr!=unsorted.end();++us_itr)
 	{
-		cout<<"index : "<<idx<<" value : "<<(*itr_is)<<" length : "<<len<<endl;
-	}*/
-/*	for(idx=0, itr_ss=sorted_ss.begin();itr_ss!=sorted_ss.end();++itr_ss, ++idx)
-	{
-		cout<<"index : "<<idx<<" value : "<<(*itr_ss)<<" length : "<<len<<endl;
-	}*//*
-	for(idx=0, itr_bis=sorted_bis.begin();itr_bis!=sorted_bis.end();++itr_bis, ++idx)
-	{
-		cout<<"index : "<<idx<<" value : "<<(*itr_bis)<<" length : "<<len<<endl;
-	}*/
-	
-	/*
-	for(itr_is=sorted_is.begin(), itr_cs=sorted_cs.begin();itr_is!=sorted_is.end(), itr_cs!=sorted_cs.end();++itr_is, ++itr_cs)
-	{
-		if(*itr_is==*itr_cs)
-		{
-			cout<<"same"<<endl;
-		}
-		else
-		{
-			cout<<"differ"<<endl;
-		}
-	}*/
-/*	for(itr_ss=sorted_ss.begin(), itr_cs=sorted_cs.begin();itr_ss!=sorted_ss.end(), itr_cs!=sorted_cs.end();++itr_ss, ++itr_cs)
-	{
-		if(*itr_ss==*itr_cs)
-		{
-			cout<<"same"<<endl;
-		}
-		else
-		{
-			cout<<"differ"<<endl;
-		}
-	}*/
-	
-	cout<<"index : "<<find<<endl;
+		cout<<*(us_itr)<<" | ";
+	}
+	cout<<endl;
+	CStest(unsorted);
+	IStest(unsorted);
+	SStest(unsorted);
+	BIStest(unsorted);
 	
 	return 0;
 }
